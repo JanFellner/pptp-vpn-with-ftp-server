@@ -16,6 +16,8 @@ for file in "${CONFIG_FILES[@]}"; do
   fi
 done
 
+[ ! -e /dev/ppp ] && mknod /dev/ppp c 108 0 && chmod 600 /dev/ppp
+
 echo "[start.sh] ▶ Checking /dev/ppp..."
 if [ ! -e /dev/ppp ]; then
   echo "[start.sh] ▶ /dev/ppp not found, creating it..."
@@ -70,6 +72,9 @@ iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 30000:30009 -j ACCEPT
 
 # echo "[start.sh] ▶ setting access rights on /var/ftp/upload..."
 chmod 777 /var/ftp/upload
+
+# echo "[start.sh] ▶ Starting syslog..."
+service rsyslog start
 
 # echo "[start.sh] ▶ Starting vsftpd..."
 service vsftpd start

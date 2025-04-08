@@ -1,7 +1,7 @@
 FROM debian:bullseye
 
 RUN apt-get update && \
-    apt-get install -y pptpd vsftpd iproute2 iptables && \
+    apt-get install -y pptpd vsftpd iproute2 iptables rsyslog && \
     mkdir -p /etc/ppp /var/run/pptpd /var/ftp/upload
 
 # Nur Startscript ins Image kopieren
