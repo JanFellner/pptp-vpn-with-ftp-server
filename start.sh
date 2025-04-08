@@ -16,8 +16,6 @@ for file in "${CONFIG_FILES[@]}"; do
   fi
 done
 
-[ ! -e /dev/ppp ] && mknod /dev/ppp c 108 0 && chmod 600 /dev/ppp
-
 echo "[start.sh] ▶ Checking /dev/ppp..."
 if [ ! -e /dev/ppp ]; then
   echo "[start.sh] ▶ /dev/ppp not found, creating it..."
