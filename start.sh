@@ -2,6 +2,22 @@
 
 set -e
 
+echo "[start.sh] ▶ Checking required config files..."
+
+CONFIG_FILES=(
+  "/config/pptpd.conf"
+  "/config/chap-secrets"
+  "/config/pptpd-options"
+  "/config/vsftpd.conf"
+)
+
+for file in "${CONFIG_FILES[@]}"; do
+  if [ ! -f "$file" ]; then
+    echo "[ERROR] Required config file '$file' not found"
+    exit 1
+  fi
+done
+
 echo "[start.sh] ▶ Enabling IP forwarding..."
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
@@ -17,6 +33,12 @@ if ! id -u uploaduser &>/dev/null; then
     useradd -d /var/ftp/upload -s /sbin/nologin uploaduser
     echo "uploaduser:uploadpass" | chpasswd
 fi
+
+echo "[start.sh] ▶ Switching iptables to legacy mode..."
+update-alternatives --set iptables /usr/sbin/iptables-legacy || {
+  echo "[ERROR] Failed to switch to iptables-legacy"
+  exit 1
+}
 
 echo "[start.sh] ▶ Setting up iptables firewall rules..."
 # Clear existing rules
