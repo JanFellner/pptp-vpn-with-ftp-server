@@ -48,6 +48,9 @@ if ! id -u uploaduser &>/dev/null; then
     echo "uploaduser:uploadpass" | chpasswd
 fi
 
+echo "[start.sh] ▶ Adding sbin/nologin to shells..."
+echo /sbin/nologin >> /etc/shells
+
 echo "[start.sh] ▶ Switching iptables to legacy mode..."
 update-alternatives --set iptables /usr/sbin/iptables-legacy || {
   echo "[ERROR] Failed to switch to iptables-legacy"
