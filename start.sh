@@ -65,6 +65,9 @@ iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 21 -j ACCEPT
 iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 20 -j ACCEPT
 iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 30000:30009 -j ACCEPT
 
+# echo "[start.sh] ▶ setting access rights on /var/ftp/upload..."
+chmod 777 /var/ftp/upload
+
 # echo "[start.sh] ▶ Starting vsftpd..."
 service vsftpd start
 
