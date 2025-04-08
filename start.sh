@@ -3,20 +3,30 @@
 set -e
 
 echo "[start.sh] ▶ Checking required config files..."
-
 CONFIG_FILES=(
   "/config/pptpd.conf"
   "/config/chap-secrets"
   "/config/pptpd-options"
   "/config/vsftpd.conf"
 )
-
 for file in "${CONFIG_FILES[@]}"; do
   if [ ! -f "$file" ]; then
     echo "[ERROR] Required config file '$file' not found"
     exit 1
   fi
 done
+
+echo "[start.sh] ▶ Checking /dev/ppp..."
+if [ ! -e /dev/ppp ]; then
+  echo "[start.sh] ▶ /dev/ppp not found, creating it..."
+  mknod /dev/ppp c 108 0 || {
+    echo "[ERROR] Failed to create /dev/ppp"
+    exit 1
+  }
+  chmod 600 /dev/ppp
+else
+  echo "[start.sh] ▶ /dev/ppp already exists."
+fi
 
 echo "[start.sh] ▶ Enabling IP forwarding..."
 echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -51,8 +61,10 @@ iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 21 -j ACCEPT
 iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 20 -j ACCEPT
 iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 30000:30009 -j ACCEPT
 
-echo "[start.sh] ▶ Starting vsftpd..."
-service vsftpd start
+# echo "[start.sh] ▶ Starting vsftpd..."
+# service vsftpd start
 
 echo "[start.sh] ▶ Starting pptpd..."
 exec /usr/sbin/pptpd --fg
+
+echo "[start.sh] ▶ all done :)"
