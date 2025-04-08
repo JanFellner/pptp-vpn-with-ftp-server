@@ -35,7 +35,7 @@ echo "[start.sh] ▶ Linking external config files..."
 ln -sf /config/pptpd.conf /etc/pptpd.conf
 ln -sf /config/chap-secrets /etc/ppp/chap-secrets
 ln -sf /config/pptpd-options /etc/ppp/pptpd-options
-ln -sf /config/vsftpd.conf /etc/vsftpd.conf
+cp /config/vsftpd.conf /etc/vsftpd.conf
 
 echo "[start.sh] ▶ Setting proper access rights on vsftpd.conf..."
 chmod 600 /etc/vsftpd.conf
