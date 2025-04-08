@@ -37,6 +37,10 @@ ln -sf /config/chap-secrets /etc/ppp/chap-secrets
 ln -sf /config/pptpd-options /etc/ppp/pptpd-options
 ln -sf /config/vsftpd.conf /etc/vsftpd.conf
 
+echo "[start.sh] ▶ Setting proper access rights on vsftpd.conf..."
+chmod 600 /etc/vsftpd.conf
+chown root:root /etc/vsftpd.conf
+
 echo "[start.sh] ▶ Setting up FTP user..."
 # Create FTP user only if not exists
 if ! id -u uploaduser &>/dev/null; then
