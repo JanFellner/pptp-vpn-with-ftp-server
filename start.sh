@@ -40,13 +40,16 @@ update-alternatives --set iptables /usr/sbin/iptables-legacy || {
   exit 1
 }
 
-echo "[start.sh] ▶ Setting up iptables firewall rules..."
-# Clear existing rules
+echo "[start.sh] ▶ Setting iptables default policies..."
 iptables -F
-iptables -A INPUT -i ppp+ -p tcp --dport 21 -j ACCEPT
-iptables -A INPUT -i ppp+ -p tcp --dport 30000:30009 -j ACCEPT
-iptables -A INPUT -i ! ppp+ -p tcp --dport 21 -j DROP
-iptables -A INPUT -i ! ppp+ -p tcp --dport 30000:30009 -j DROP
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD DROP
+
+echo "[start.sh] ▶ Allow VPN client to access container FTP only..."
+iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 21 -j ACCEPT
+iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 20 -j ACCEPT
+iptables -A INPUT -s 192.168.100.0/24 -p tcp --dport 30000:30009 -j ACCEPT
 
 echo "[start.sh] ▶ Starting vsftpd..."
 service vsftpd start
